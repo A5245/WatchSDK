@@ -1,0 +1,91 @@
+<template>
+	<div class="demo-page">
+		<text class="title">{{ $t("a.b") }},欢迎打开{{ title }}</text>
+		<text class="value">Status: {{ status }}</text>
+		<text class="value">Msg: {{ msg }}</text>
+		<!-- 点击跳转详情页 -->
+		<input class="btn" type="button" value="Refresh" onclick="refresh" />
+		<input class="btn" type="button" value="Send" onclick="sendMsg" />
+	</div>
+</template>
+
+<script>
+import interconnect from "@system.interconnect";
+import prompt from "@system.prompt";
+
+export default {
+	private: {
+		title: "示例页面",
+		status: "Unknown",
+		msg: "Nothing",
+		connect: interconnect.instance(),
+	},
+	sendMsg() {
+		this.connect.send({
+			data: { data: parseInt(Math.random() * 100000000) },
+			success: () => {},
+			fail: (data) => {
+				prompt.showToast({
+					message: `handling fail, errMsg = ${data.data}, errCode = ${data.code}`,
+					duration: 2000,
+				});
+			},
+		});
+	},
+	refresh() {
+		const current = this.connect.getApkStatus();
+		if (current === "UNINSTALLED") {
+			this.status = "target app not found";
+		} else if (current === "CONNECTED") {
+			this.status = "connected";
+		} else if (current === "DISCONNECTED") {
+			this.status = "disconnect";
+		} else {
+			this.status = "getApkStatus timeout";
+		}
+
+		this.connect.onmessage = (data) => {
+			this.msg = data.data;
+			this.connect.send({
+				data: { data: Math.random() },
+				success: () => {},
+				fail: (data) => {
+					prompt.showToast({
+						message: `handling fail, errMsg = ${data.data}, errCode = ${data.code}`,
+						duration: 2000,
+					});
+				},
+			});
+		};
+		this.connect.onclose = (data) => {
+			prompt.showToast({
+				message: `${this.connect.getApkStatus()}`,
+				duration: 2000,
+			});
+		};
+	},
+};
+</script>
+
+<style>
+.demo-page {
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.title {
+	font-size: 20px;
+	text-align: center;
+}
+
+.btn {
+	width: 200px;
+	height: 40px;
+	margin-top: 20px;
+	border-radius: 5px;
+	background-color: #09ba07;
+	font-size: 20px;
+	color: #ffffff;
+}
+</style>

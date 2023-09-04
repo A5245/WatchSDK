@@ -1,0 +1,51 @@
+{
+  "package": "com.application.watch.demo",
+  "name": "WatchDemo",
+  "versionName": "1.0.0",
+  "versionCode": 1,
+  "minPlatformVersion": 1100,
+  "icon": "/common/logo.png",
+  "simulationVersion": "default",
+  "deviceTypeList": [
+    "watch"
+  ],
+  "features": [
+    {
+      "name": "system.file"
+    },
+    {
+      "name": "system.storage"
+    },
+    {
+      "name": "system.network"
+    },
+    {
+      "name": "system.app"
+    },
+    {
+      "name": "system.device"
+    },
+    {
+      "name": "system.request"
+    },
+    {
+      "name": "system.interconnect"
+    }
+  ],
+  "display": {
+    "backgroundColor": "#000000",
+    "textColor": "#ffffff"
+  },
+  "config": {
+    "logLevel": "log",
+    "designWidth": 466
+  },
+  "router": {
+    "entry": "pages/index",
+    "pages": {
+      "pages/index": {
+        "component": "index"
+      }
+    }
+  }
+}
